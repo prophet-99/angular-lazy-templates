@@ -6,12 +6,21 @@
   <app-home />
   <!-- HOME -->
 
-  <!-- ABOUT ME -->
-  <app-about />
-  <!-- ABOUT ME -->
-  <!-- SKILLS -->
-  <app-skills />
-  <!-- SKILLS -->
+  <ng-template #contentSlot />
+
+  <ng-container *ngIf="flowState$ | async as state">
+    <ng-template *ngIf="state === 'IN_PROGRESS'" [ngTemplateOutlet]="loaderTmpl" />
+    <ng-template *ngIf="state === 'FAILED'" [ngTemplateOutlet]="errorTmpl" />
+  </ng-container>
+
+  <ng-template #loaderTmpl>
+   <app-skeleton />
+  </ng-template>
+  <ng-template #errorTmpl>
+    <p class="text-center text-red-700 text-xl">
+      Oops, ocurrió un error!
+    </p>
+  </ng-template>
 
   <!-- FOOTER -->
   <app-footer />

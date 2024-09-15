@@ -9,6 +9,7 @@ import { HomeComponent } from './components/home/home.component';
 import { FooterComponent } from './core/components/footer/footer.component';
 import { HeaderComponent } from './core/components/header/header.component';
 import { SkeletonComponent } from './components/skeleton/skeleton.component';
+import { InViewportDirective } from './directives/in-viewport.directive';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { SkeletonComponent } from './components/skeleton/skeleton.component';
     FooterComponent,
     HeaderComponent,
     SkeletonComponent,
+    InViewportDirective,
   ],
   imports: [BrowserModule, AppRoutingModule],
   providers: [],

@@ -9,10 +9,14 @@
   <ng-template #contentSlot />
 
   <ng-container *ngIf="flowState$ | async as state">
+    <ng-template *ngIf="state == 'NOT_STARTED'" [ngTemplateOutlet]="placeholderTmpl" />
     <ng-template *ngIf="state === 'IN_PROGRESS'" [ngTemplateOutlet]="loaderTmpl" />
     <ng-template *ngIf="state === 'FAILED'" [ngTemplateOutlet]="errorTmpl" />
   </ng-container>
 
+  <ng-template #placeholderTmpl>
+    <p (appInViewport)="elementOnViewport()">Aquí se debería renderizar...</p>
+  </ng-template>
   <ng-template #loaderTmpl>
    <app-skeleton />
   </ng-template>

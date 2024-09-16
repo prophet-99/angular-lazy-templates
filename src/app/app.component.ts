@@ -9,6 +9,12 @@ const delayFn = (timing: number) =>
     }, timing);
   });
 
+const loadDeps = () =>
+  Promise.allSettled([
+    import('./components/about/about.component'),
+    import('./components/skills/skills.component'),
+  ]);
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -19,18 +25,20 @@ export class AppComponent {
   public contentSlot!: ViewContainerRef;
   public flowState$ = new BehaviorSubject<FlowStateType>('NOT_STARTED');
 
-  public elementOnViewport(): void {
-    delayFn(1000).then(() => this.flowState$.next('IN_PROGRESS'));
+  public async elementOnViewport(): Promise<void> {
+    await delayFn(1000);
+    this.flowState$.next('IN_PROGRESS');
 
-    import('./components/about/about.component').then(
-      (aboutRef) => {
-        delayFn(3000).then(() => {
-          this.contentSlot.createComponent(aboutRef.AboutComponent);
-          this.flowState$.next('COMPLETE');
-        });
-      },
-      (err) => this.flowState$.next('FAILED')
-    );
+    const [aboutRef, skillsRef] = await loadDeps();
+    if (aboutRef.status === 'rejected' || skillsRef.status === 'rejected') {
+      this.flowState$.next('FAILED');
+      return;
+    }
+
+    await delayFn(3000);
+    this.contentSlot.createComponent(aboutRef.value.AboutComponent);
+    this.contentSlot.createComponent(skillsRef.value.SkillsComponent);
+    this.flowState$.next('COMPLETE');
   }
 }
 
